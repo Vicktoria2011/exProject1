@@ -1,0 +1,20 @@
+{
+  "email": "zvitnev.420.11.15@gmail.com",
+  "password": "123456",
+  "repeatPassword": "123456",
+  "securityQuestion": "select",
+  "answer": "Elena",
+  "country": "Ukraine",
+  "name": "Viktoria",
+  "mobileNumber": "3805012345",
+  "zipCode": "61000",
+  "address": "st. H.Maidanu,53",
+  "city": "Chernivtsi",
+  "state": "123",
+  "cardNumber": "1234567812345678",
+  "coupon": "1234567890", 
+  "invalidEmail": "invalid@mail.com",
+  "invalidPassword": "12345",
+  "name2": "hhgh" 
+ 
+}
