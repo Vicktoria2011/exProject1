@@ -4,50 +4,56 @@ class RegistrationPage extends BasePage{
    
     constructor(){
         super();
-        this.elements.email = '#emailControl';
-        this.elements.password = '#passwordControl';
-        this.elements.repeatPassword = '#repeatPasswordControl';
-        this.elements.securityQuestion = '#securityQuestion';
-        this.elements.answer = '#securityAnswerControl';
+        this.elements.emailField = '#emailControl';
+        this.elements.passwordField = '#passwordControl';
+        this.elements.repeatPasswordField = '#repeatPasswordControl';
+        this.elements.securityQuestionField = '.mat-form-field-hide-placeholder .mat-select-placeholder';
+        this.elements.chooseSecretQuestionField = '.mat-option-text';
+        this.elements.answerField = '#securityAnswerControl';
         this.elements.submitRegistrationFormButton = '#registerButton';
+        this.elements.submitRegistrationForm = '.mat-card.mat-card.mat-focus-indicator.mat-elevation-z6';
     }
-  
-    getUserEmail(){
-        return cy.get(this.elements.email)
-    }
-
-    getUserPassword(){
-        return cy.get(this.elements.password)
+       
+    getUserEmailField(){
+        return cy.get(this.elements.emailField);
     }
 
-    getUserRepeatPassword(){
-        return cy.get(this.elements.repeatPassword)
+    getUserPasswordField(){
+        return cy.get(this.elements.passwordField);
     }
 
-    getUserSrepeatPassword(){
-        return cy.get(this.elements.securityQuestion)
+    getUserRepeatPasswordField(){
+        return cy.get(this.elements.repeatPasswordField);
     }
 
-    getUserSrepeatAnswer(){
-        return cy.get(this.elements.answer)
+    getSecurityQuestionField(){
+        return cy.get(this.elements.securityQuestionField);
     }
 
-    getUserSrepeatSubmitRegistrationFormButton(){
-        return cy.get(this.elements.submitRegistrationFormButton)
+    getChooseSecretQuestionField(){
+        return cy.get(this.elements.chooseSecretQuestionField);
+    }
+
+    getAnswerField(){
+        return cy.get(this.elements.answerField);
+    }
+
+    getSubmitRegistrationFormButton(){
+        return cy.get(this.elements.submitRegistrationFormButton);
+    }
+
+    getSubmitRegistrationForm(){
+        return cy.get(this.elements.submitRegistrationForm);
     }
 
     fillRegistrationFields(user){
 
-    }
-
-    fillRegistrationFields(user){
         cy.log('Fill in registration fields...');
-        this.elements.email().type(user.email);
-        this.elements.password().type(user.password);
-        this.elements.repeatPassword().type(user.repeatPassword);
-        this.elements.securityQuestion().type(user.securityQuestion);
-        this.elements.answer().type(user.answer);
-       } 
+        this.getUserEmailField().type(user.email);
+        this.getUserPasswordField().type(user.password);
+        this.getUserRepeatPasswordField().type(user.repeatPassword);
+        this.getAnswerField().type(user.answer);
+        } 
 } 
-export default new RegistrationPage;
+export default new RegistrationPage();
   

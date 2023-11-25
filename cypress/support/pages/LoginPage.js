@@ -4,14 +4,32 @@ class LoginPage extends BasePage {
 
   constructor() {
     super();
-    this.elements.registerAccountButton = '#newCustomerLink';
+    this.elements.registerNewCustomerLink = '#newCustomerLink';
+    this.elements.authorizationEmailField = '#email';
+    this.elements.authorizationPasswordField = '#password';
+    this.elements.authorizationFormButton = 'button[type="submit"]';
+    this.elements.checkingMessages = 'div.error.ng-star-inserted';
+  }
+ 
+  getRegisterNewCustomerLink(){
+    return cy.get(this.elements.registerNewCustomerLink);
   }
 
-  getRegisterAccountButton(){
-    return cy.get(this.elements.registerAccountButton)
+  getAuthorizationEmailField(){
+    return cy.get(this.elements.authorizationEmailField);
   }
+
+  getAuthorizationPasswordField(){
+    return cy.get(this.elements.authorizationPasswordField);
+  }
+
+  getAuthorizationFormButton(){
+    return cy.get(this.elements.authorizationFormButton);
+  }
+
+  getCheckingMessages(){
+    return cy.get(this.elements.checkingMessages);
+  }
+
 }
-
 export default new LoginPage();
-
-

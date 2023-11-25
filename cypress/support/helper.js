@@ -1,44 +1,69 @@
+import { faker } from '@faker-js/faker';
+import registrationPage from './pages/RegistrationPage';
+import homePage from './pages/HomePage';
+import loginPage from './pages/LoginPage';
+import accountPage from './pages/AccountPage';
+
+export function registration(){
+  const generatedPassword = faker.internet.password();
+  const user = {
+    email: faker.internet.email(),
+    password: generatedPassword,
+    repeatPassword: generatedPassword,
+    answer: faker.internet.userName(),
+  }
+
+    homePage.visit();
+
+    cy.log('Close pop-up windows');
+    homePage.getPopUpWindow1().click();
+    homePage.getPopUpWindow2().click();
+
+    cy.log('Opening registration panel');
+    homePage.getHeaderAccountButton().click();
+    homePage.getHederLoginButton().click();
+    loginPage.getRegisterNewCustomerLink().click();
+
+    cy.log('Submit registration form...');
+    registrationPage.fillRegistrationFields(user);
+    registrationPage.getSecurityQuestionField().click();;
+    registrationPage.getChooseSecretQuestionField().contains('Your eldest siblings middle name?').click();
+    registrationPage.getSubmitRegistrationFormButton().click();
+    
+    cy.log('Verifying successful registration...');
+    accountPage.getSuccsesfulRegistration().should('contain', 'Registration completed successfully. You can now log in.');
+
+    return user;
+  }
+
+
 export function login(user){
     cy.log('Open website login page');
     cy.visit('#/login');
 
     cy.log('Authorize user');
-    cy.get('#email').type(user.email, {force: true});
-    cy.get('[class="mat-focus-indicator mat-tooltip-trigger mat-raised-button mat-button-base mat-warn ng-star-inserted"]').click();
-    cy.get('.cc-btn.cc-dismiss').click();
-    cy.get('#password').type(user.password);
-    cy.get('button[type="submit"]').contains('Log in').click();
+    loginPage.getAuthorizationEmailField().type(user.email, {force: true});
+    loginPage.getAuthorizationPasswordField().type(user.password);
+    loginPage.getAuthorizationFormButton().contains('Log in').click();
 
-    cy.get('[class="mat-toolbar mat-elevation-z6 mat-primary mat-toolbar-multiple-rows"]').should('contain', 'Your Basket');
+    accountPage.getSuccsesfulLogin().should('contain', 'Your Basket');
 }
 
-   
-    //export function findProduct(productName, attempts = 3) {
-      //  cy.get('body').then(body => {
-      //      const productElement = body.find(`.item-name[title="${productName}"]`);
-            
-       //     if (productElement.length > 0) {
-        //        cy.wrap(productElement).should('exist').click();
-        //    } else if (attempts > 0) {
-        //        cy.get('.mat-paginator .mat-paginator-page-size .mat-select-trigger', { timeout: 10000 }).click();
-        //        cy.get('.mat-option-text').eq(2).click();
-                
-       //         findProduct(productName, attempts - 1);
-        //    }
-      //  });
-    //}
-    
-    export function findProduct(productName) {
 
-        cy.get('body').then( body => {
-            if(body.find(`.item-name[value="${productName}"]`).length > 0){
-                cy.get(`.item-name[value="${productName}"]`).click();
-            }else{
-                cy.get('button[type="button"][aria-label="Next page"]').click({force: true});
-                findProduct(productName);
-            }
-        })
-    }
-    
+export function findProduct(productName) {
+     cy.get('#searchQuery').type(`${productName}{enter}`).then(() => {
+     cy.get('.table-container.custom-slate').contains(productName).should('exist').then(() => {
+     cy.get('button[aria-label="Add to Basket"]').click();
+     });
+  });
+}
 
-        
+export function calculateCaptchaValue(captchaExpression) {
+      try {
+      const result = eval(captchaExpression);
+      return result.toString();
+      } catch (error) {
+      console.error('Error calculating captcha expression:', error);
+      return null;
+      }
+    }     

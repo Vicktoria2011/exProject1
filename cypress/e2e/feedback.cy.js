@@ -1,22 +1,40 @@
+import { calculateCaptchaValue } from '../support/helper'; 
+import homePage from '../support/pages/HomePage';
+import { registration } from '../support/helper';
+import { login } from '../support/helper';
+import feedbackPage from '../support/pages/FeedbackPage.cy';
 
-describe('Customer Feedback', () => {
+it('Feedback', () => {
+    homePage.visit();
 
-    it('Feedback', () => {
-        cy.visit('/');
-
-        cy.get('[class="mat-focus-indicator mat-tooltip-trigger mat-raised-button mat-button-base mat-warn ng-star-inserted"]').click();
-        cy.get('button[aria-label="Open Sidenav"]').click();
-        cy.get('a[aria-label="Go to contact us page"]').click();
-        cy.get('#comment').type('Your juice is not bad');
-        cy.get('#rating').click();
-        cy.get('.mat-slider#rating').invoke('text').should('eq', '3★');
-
+    const registeredUser = registration();
+    login(registeredUser);
         
-        
-        //cy.get('#captcha').type(captchaSolution);
-        //cy.get('#captchaControl').click();
-        cy.url().should('include', 'Thank you for your feedback.');
+    cy.log('Open site menu');
+    feedbackPage.getOpenSideMenu().click({ force: true });
+    feedbackPage.getFeedbackButton().click();
 
-      })
-})
+    cy.log('Form customer Feedback');
+    const feedbackData = {
+        comment: 'Your juice is good!',
+        stars: 5,
+    };
+
+    feedbackPage.fillFeedbackFields(feedbackData);
+    feedbackPage.getCommentField().click();
+    feedbackPage.getClickFiveStars().click();
+    feedbackPage.getClickFiveStarsBotton().click('bottomRight');
+
+    feedbackPage.getCodCaptcha().invoke('text').then((text) => {
+        console.log('Captcha text:', text);
+        const captchaValue = calculateCaptchaValue(text);
     
+        console.log('Captcha calculation result:', captchaValue);
+        feedbackPage.getEnterResultCaptcha().type(captchaValue);
+        feedbackPage.getSubmitCustomerFeedback().click();
+
+        cy.log('Checking form submissions');
+        feedbackPage.getCommentField().should('have.value', '');
+        feedbackPage.getEnterResultCaptcha().should('have.value', '');
+      });
+});
